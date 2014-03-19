@@ -1,0 +1,44 @@
+#!/usr/bin/python
+import os;
+import time;
+import cv;
+import socket #import socket module
+
+storage = cv.CreateMemStorage()
+haar = cv.Load('/usr/share/opencv/haarcascades/haarcascade_frontalface_default.xml')
+
+filename = "capture.jpg"
+
+while (True):
+  print "capturing image"
+  start = time.time()
+  os.system("/opt/vc/bin/raspistill -w 800 -h 600 -t 0 -o " + filename)
+  end = time.time()
+  print "captured image in " + str(end-start) + " seconds"
+
+  print "processing image"
+  start = time.time()
+  image = cv.LoadImage(filename)
+  detected = cv.HaarDetectObjects(image, haar, storage, 1.2, 2, cv.CV_HAAR_DO_CANNY_PRUNING, (100,100))
+  end = time.time()
+  print "processed image in " + str(end-start) + " seconds"
+
+  if detected:
+    print "detected face"
+    print "sending message to other Raspberry Pi"
+    
+    s = socket.socket() #create a socket object
+    host = '128.208.57.231' #Host i.p
+    port = 12397 #Reserve a port for your service
+
+    s.connect((host,port))
+    print s.recv(1024),host
+    s.close
+
+    for face in detected:
+      print face
+      s.send(str('face detected!'))
+      s.send(str('yes'))
+    s.close  
+  else:
+    print "no face"
