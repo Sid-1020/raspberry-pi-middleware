@@ -19,7 +19,7 @@ print "IP Address (eth0): ", get_ip_addr('eth0');
 print "IP Address (wlan0): ",  get_ip_addr('wlan0');
 print "Sending email..."
 
-login, password = "sidvbhave@gmail.com", "Sidl0ves@manu";
+login, password = "email@domain.com", "email_passwd";
 
 msg = MIMEText("Time: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S:%s") + "\nIP Address (eth0): " + get_ip_addr("eth0") + "\nIP Address (wlan0): " + get_ip_addr("wlan0"));
 msg['Subject'] = Header("My Raspberry Pi IP - 3", "utf-8");
